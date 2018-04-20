@@ -1,0 +1,4 @@
+JYP 114 17701906159 yijiull 123456
+CZ002001010117392 NanFangHangKong beijing guangzhou 201801011739 First_class 7155 506 0
+CZ002001010117392 NanFangHangKong beijing guangzhou 201801011739 First_class 7155 505 0
+CZ002001010117392 NanFangHangKong beijing guangzhou 201801011739 Business_Class 4472 505 1
