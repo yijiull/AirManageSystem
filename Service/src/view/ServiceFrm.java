@@ -22,19 +22,19 @@ import javax.swing.border.EmptyBorder;
 
 import BplusTree.BplusTree;
 import BplusTree.Node;
+import Util.FileUtil;
 import Util.ServerListen;
 import manager.My_System;
 
-public class ServiceFrm extends JFrame implements ActionListener{
+public class ServiceFrm extends JFrame implements ActionListener {
 
-	public static int port = 8888; //服务器的侦听端口
+	public static int port = 8888; // 服务器的侦听端口
 	ServerSocket serverSocket;
 	public static BplusTree bt;
-	
-	ServerListen listenThread;
-	private JPanel contentPane; 
 
-	
+	ServerListen listenThread;
+	private JPanel contentPane;
+
 	/**
 	 * Launch the application.
 	 */
@@ -57,7 +57,7 @@ public class ServiceFrm extends JFrame implements ActionListener{
 	 * Create the frame.
 	 */
 	public ServiceFrm() {
-		bt = new BplusTree(5000);  //设置阶数m
+		bt = new BplusTree(100); // 设置阶数m
 		new Init();
 		addWindowListener(new WindowAdapter() {
 
@@ -74,7 +74,7 @@ public class ServiceFrm extends JFrame implements ActionListener{
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		
+
 		startService();
 	}
 
@@ -88,22 +88,24 @@ public class ServiceFrm extends JFrame implements ActionListener{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void StopService() {
 		listenThread.isStop = true;
 		System.out.println("停止服务...");
 	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	class Init extends Thread{
+
+	class Init extends Thread {
 		public Init() {
 			start();
 		}
-		public void run(){
+
+		public void run() {
 			int cnt = 1;
 			long cur = System.nanoTime();
 			RandomAccessFile rf = null;
@@ -120,8 +122,9 @@ public class ServiceFrm extends JFrame implements ActionListener{
 				e.printStackTrace();
 			}
 			try {
-				for (int i = 0; i < rf.length() / 130; i++) {
-					if(i % 10000 == 0)System.out.println(i);
+				for (int i = 0; i < rf.length() / 130 ; i++) {
+					if (i % 10000 == 0)
+						System.out.println(i);
 					String com = rf.readUTF();
 					String id = rf.readUTF();
 					String st = rf.readUTF();
@@ -148,42 +151,32 @@ public class ServiceFrm extends JFrame implements ActionListener{
 				e.printStackTrace();
 			}
 			Node next = bt.getHead();
+			System.out.println("node --------" + next.getParent());
 			int count = 0;
 			int temp = 0;
-			while (true) {
+			boolean tr = true;
+			while (tr) {
 				if (next == null)
 					break;
 				++count;
-				System.out.println(count);
+				System.out.println("file id " + count);
 				List<Entry<Comparable, Object>> entries = next.getEntries();
+
+				StringBuilder sb = new StringBuilder();
+				for (Entry entry : entries) {
+					sb.append(entry.getKey());
+					sb.append(" " + entry.getValue() + " ");
+				}
+				System.out.println(sb.toString());
 				temp += entries.size();
-				System.out.println("file Size  "+ entries.size());
-				System.out.println("cur == "+temp);
-				
+				System.out.println("file Size  " + entries.size());
+				System.out.println("cur == " + temp);
+
 				File file = new File("src\\index\\" + String.valueOf(count) + ".txt");
 				next.setFile(file);
-				ObjectOutputStream objectOutputStream = null;
-				try {
-					objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				try {
-					objectOutputStream.writeObject(next);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				try {
-					objectOutputStream.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				System.out.println(next.toString());
+				FileUtil.newInstance().addFile("index\\" + String.valueOf(count), next.toString(), false);
+
 				next = next.getNext();
 			}
 			cur = System.nanoTime() - cur;

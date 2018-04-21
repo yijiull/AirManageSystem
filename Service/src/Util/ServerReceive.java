@@ -87,10 +87,10 @@ public class ServerReceive extends Thread {
 					int ok = 1;
 					List<Vector<String>> list = new ArrayList<>();
 					while (true) {
-						File tempFile = new File("src\\index\\" + id + ".txt");
+						File tempFile = new File("src\\file\\index\\" + id + ".txt");
 						if (tempFile.exists() == false)
 							break;
-						Scanner cin = new Scanner(FileUtil.newInstance().getAllAirInfo(id));
+						Scanner cin = new Scanner(FileUtil.newInstance().readFile("index\\"+id));
 						while (cin.hasNext()) {
 							String time = cin.next();
 							System.out.println(time);
@@ -126,7 +126,9 @@ public class ServerReceive extends Thread {
 					int id = user.cin.readInt();
 					int level = user.cin.readInt();
 					int left = FileUtil.newInstance().getCnt(id, level);
+					System.out.println(" £”‡    = "+left);
 					if(left <= 0) {
+						
 						user.cout.writeObject(" €Û¿");
 						user.cout.flush();
 						continue;

@@ -88,7 +88,7 @@ public class Node implements Serializable {
         //如果是叶子节点
         if (isLeaf){
             //不需要分裂，直接插入或更新
-            if (contains(key) || entries.size() < tree.getOrder()){
+            if (/*contains(key) || */entries.size() < tree.getOrder()){
                 insertOrUpdate(key, obj);
                 if (parent != null) {
                     //更新父节点
@@ -505,11 +505,11 @@ public class Node implements Serializable {
         //否则遍历列表
         for (int i = 0; i < entries.size(); i++) {
             //如果该关键字键值已存在，则更新
-            if (entries.get(i).getKey().compareTo(key) == 0) {
+            /*if (entries.get(i).getKey().compareTo(key) == 0) {
                 entries.get(i).setValue(obj);
                 return;
                 //否则插入
-            }else if (entries.get(i).getKey().compareTo(key) > 0){
+            }else*/ if (entries.get(i).getKey().compareTo(key) > 0){
                 //插入到链首
                 if (i == 0) {
                     entries.add(0, entry);
