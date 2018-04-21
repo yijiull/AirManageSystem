@@ -175,7 +175,7 @@ public class ServiceFrm extends JFrame implements ActionListener {
 
 				File file = new File("src\\index\\" + String.valueOf(count) + ".txt");
 				next.setFile(file);
-				System.out.println(next.toString());
+//				System.out.println(next.toString());
 				FileUtil.newInstance().addFile("index\\" + String.valueOf(count), next.toString(), false);
 
 				next = next.getNext();
