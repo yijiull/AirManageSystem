@@ -162,12 +162,13 @@ public class ServiceFrm extends JFrame implements ActionListener {
 				System.out.println("file id " + count);
 				List<Entry<Comparable, Object>> entries = next.getEntries();
 
-				StringBuilder sb = new StringBuilder();
+				/*StringBuilder sb = new StringBuilder();
 				for (Entry entry : entries) {
 					sb.append(entry.getKey());
 					sb.append(" " + entry.getValue() + " ");
 				}
-				System.out.println(sb.toString());
+				System.out.println(sb.toString());*/
+				
 				temp += entries.size();
 				System.out.println("file Size  " + entries.size());
 				System.out.println("cur == " + temp);
