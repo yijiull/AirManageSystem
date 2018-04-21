@@ -52,7 +52,7 @@ public class ServerListen extends Thread {
 					User u = (User) user.cin.readObject();
 					String userName = u.getUserName();
 					String password = u.getPassword();
-					Scanner cin = new Scanner(FileUtil.readFile("user"));
+					Scanner cin = new Scanner(FileUtil.newInstance().readFile("user"));
 					while(cin.hasNext()) {
 						if(cin.next().equals(userName)) {
 							JOptionPane.showMessageDialog(null, "该用户名已被注册！");
@@ -67,10 +67,10 @@ public class ServerListen extends Thread {
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
-					FileUtil.addFile(userName, u.toString(), false);
-					System.out.println(FileUtil.readFile(userName));
+					FileUtil.newInstance().addFile(userName, u.toString(), false);
+					System.out.println(FileUtil.newInstance().readFile(userName));
 					
-					FileUtil.addFile("user", userName + " " + password, true);
+					FileUtil.newInstance().addFile("user", userName + " " + password, true);
 					
 					System.out.println("注册：  " + u);
 					user.cout.writeObject("注册成功");
@@ -79,14 +79,14 @@ public class ServerListen extends Thread {
 					user.cout.flush();
 				}else if(op.equals("登录")) {
 					User u = (User) user.cin.readObject();
-					Scanner cin = new Scanner(FileUtil.readFile("user"));
+					Scanner cin = new Scanner(FileUtil.newInstance().readFile("user"));
 					int ok = 1;
 					while(cin.hasNext()) {
 						String userName = cin.next();
 						String password = cin.next();
 						if(u.getUserName().equals(userName) &&u.getPassword().equals(password)) {
 							ok = 0;
-							Scanner c = new Scanner(FileUtil.readFile(u.getUserName()));
+							Scanner c = new Scanner(FileUtil.newInstance().readFile(u.getUserName()));
 							User temp = new User();
 							temp.setName(c.next());
 							temp.setID(c.next());

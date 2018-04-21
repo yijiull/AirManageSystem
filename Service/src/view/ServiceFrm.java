@@ -57,7 +57,7 @@ public class ServiceFrm extends JFrame implements ActionListener{
 	 * Create the frame.
 	 */
 	public ServiceFrm() {
-		bt = new BplusTree(100);  //设置阶数m
+		bt = new BplusTree(5000);  //设置阶数m
 		new Init();
 		addWindowListener(new WindowAdapter() {
 
@@ -121,6 +121,7 @@ public class ServiceFrm extends JFrame implements ActionListener{
 			}
 			try {
 				for (int i = 0; i < rf.length() / 130; i++) {
+					if(i % 10000 == 0)System.out.println(i);
 					String com = rf.readUTF();
 					String id = rf.readUTF();
 					String st = rf.readUTF();
@@ -148,11 +149,17 @@ public class ServiceFrm extends JFrame implements ActionListener{
 			}
 			Node next = bt.getHead();
 			int count = 0;
+			int temp = 0;
 			while (true) {
 				if (next == null)
 					break;
 				++count;
+				System.out.println(count);
 				List<Entry<Comparable, Object>> entries = next.getEntries();
+				temp += entries.size();
+				System.out.println("file Size  "+ entries.size());
+				System.out.println("cur == "+temp);
+				
 				File file = new File("src\\index\\" + String.valueOf(count) + ".txt");
 				next.setFile(file);
 				ObjectOutputStream objectOutputStream = null;
