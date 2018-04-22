@@ -167,13 +167,13 @@ public class ServiceFrm extends JFrame implements ActionListener {
 					sb.append(entry.getKey());
 					sb.append(" " + entry.getValue() + " ");
 				}
-				System.out.println(sb.toString());*/
+				System.out.println(sb.toString());*/  
 				
 				temp += entries.size();
 				System.out.println("file Size  " + entries.size());
 				System.out.println("cur == " + temp);
 
-				File file = new File("src\\index\\" + String.valueOf(count) + ".txt");
+				File file = new File("src\\file\\index\\" + String.valueOf(count) + ".txt");
 				next.setFile(file);
 //				System.out.println(next.toString());
 				FileUtil.newInstance().addFile("index\\" + String.valueOf(count), next.toString(), false);
