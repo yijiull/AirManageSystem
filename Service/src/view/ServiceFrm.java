@@ -14,7 +14,9 @@ import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.JFrame;
@@ -26,6 +28,7 @@ import BplusTree.Node;
 import Util.FileUtil;
 import Util.ServerListen;
 import manager.My_System;
+import model.Pair;
 import model.User;
 
 public class ServiceFrm extends JFrame implements ActionListener {
@@ -43,6 +46,15 @@ public class ServiceFrm extends JFrame implements ActionListener {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		Map<Pair, Integer> map = new HashMap<Pair, Integer>();
+		
+		Pair temp1 = new Pair(1, 2);
+		map.put(temp1, 1);
+		Pair temp2 = new Pair(1, 2);
+		System.out.println(map.containsKey(temp2));
+		System.out.println(temp1.equals(temp2));
+		System.out.println(temp1 == temp2);
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -61,6 +73,7 @@ public class ServiceFrm extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public ServiceFrm() {
+		
 		bt = new BplusTree(100); // ÉèÖÃ½×Êým
 		new Init();
 		addWindowListener(new WindowAdapter() {
@@ -126,7 +139,7 @@ public class ServiceFrm extends JFrame implements ActionListener {
 				e.printStackTrace();
 			}
 			try {
-				for (int i = 0; i < rf.length() / 130 ; i++) {
+				for (int i = 0; i < rf.length() / 130 / 30 ; i++) {
 					if (i % 10000 == 0)
 						System.out.println(i);
 					String com = rf.readUTF();

@@ -26,7 +26,7 @@ public class FileUtil {
 	
 	}
 	public static void main(String[] args) throws Exception {
-		RandomAccessFile rf = new RandomAccessFile("src\\File\\" + "result" + ".txt", "rw");
+		RandomAccessFile rf = new RandomAccessFile("src\\file\\" + "result" + ".txt", "rw");
 		for(int i = 0; i < 1; i++) {
 			StringBuffer sb = new StringBuffer();
 			sb.append(rf.readUTF() + " ");
@@ -65,7 +65,7 @@ public class FileUtil {
 	 */
 	public synchronized void makePlane() throws Exception {
 		
-		RandomAccessFile rf = new RandomAccessFile("src\\File\\" + "result" + ".txt", "rw");
+		RandomAccessFile rf = new RandomAccessFile("src\\file\\" + "result" + ".txt", "rw");
 		rf.writeUTF("china air              ");  //航空公司   25
 		rf.writeUTF("123412341234123412     "); //航班编号  25
 		rf.writeUTF("guangzhou         "); //起点20
@@ -123,7 +123,7 @@ public class FileUtil {
 	 * @throws Exception
 	 */
 	public synchronized int getCnt(int n, int level) throws Exception {
-		RandomAccessFile rf = new RandomAccessFile("src\\File\\" + "result" + ".txt", "rw");
+		RandomAccessFile rf = new RandomAccessFile("src\\file\\" + "result" + ".txt", "rw");
 		rf.seek((n - 1) * 130 + 106 + level * 8);
 		int temp = rf.readInt();
 		rf.close();
@@ -137,7 +137,7 @@ public class FileUtil {
 	 * @throws Exception
 	 */
 	public synchronized void modifyCnt(int n, int level, int fg) throws Exception {
-		RandomAccessFile rf = new RandomAccessFile("src\\File\\" + "result" + ".txt", "rw");
+		RandomAccessFile rf = new RandomAccessFile("src\\file\\" + "result" + ".txt", "rw");
 		rf.seek((n - 1) * 130 + 106 + level * 8);
 		int temp = rf.readInt();
 		rf.seek((n - 1) * 130 + 106 + level * 8);
@@ -152,7 +152,7 @@ public class FileUtil {
 	 * @throws Exception 
 	 */
 	public synchronized String getAirInfo(int n) throws Exception {
-		RandomAccessFile rf = new RandomAccessFile("src\\File\\" + "result" + ".txt", "rw");
+		RandomAccessFile rf = new RandomAccessFile("src\\file\\" + "result" + ".txt", "rw");
 		StringBuffer sb = new StringBuffer();
 		rf.seek(130L * (n-1));
 		sb.append(rf.readUTF() + " ");

@@ -1,15 +1,19 @@
 package Util;
 
-import java.io.File; 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
+import model.Pair;
 import model.User;
 import view.ServiceFrm;
 
@@ -17,23 +21,50 @@ public class ServerReceive extends Thread {
 
 	private User user;
 	private List<Integer> listId;
-	
+
 	public List<User> userList = new ArrayList<User>();
-	
-	public Queue<Ticket> queue;
-	
+
+	// 航班映射
+	public Map<Pair, Integer> map;
+
+	// 队列的链表
+	public List<Queue> waitQueueList;
+
+	// 当前排队数量
+	public int curCnt;
+
 	public ServerReceive() {
+		curCnt = 0;
+		waitQueueList = new ArrayList<>();
+		map = new HashMap<>();
 	}
 
 	public ServerReceive(User user) {
+		curCnt = 0;
+		map = new HashMap<>();
+		waitQueueList = new ArrayList<>();
 		this.user = user;
 	}
 
-	
 	public ServerReceive(User user, List<User> userList) {
+		super();
+		map = new HashMap<>();
+		waitQueueList = new ArrayList<>();
+		curCnt = 0;
+		this.user = user;
+		this.userList = userList;
+	}
+
+	
+
+	public ServerReceive(User user, List<User> userList, Map<Pair, Integer> map, List<Queue> waitQueueList,
+			int curCnt) {
 		super();
 		this.user = user;
 		this.userList = userList;
+		this.map = map;
+		this.waitQueueList = waitQueueList;
+		this.curCnt = curCnt;
 	}
 
 	@Override
@@ -137,7 +168,22 @@ public class ServerReceive extends Thread {
 				}else if(op.equals("排队抢票")){
 					int id = user.cin.readInt();
 					int level = user.cin.readInt();
-					
+					Pair pair = new Pair(id,level);
+					System.out.println("map = " + map);
+					if(!map.containsKey(pair)) {
+						System.out.println("不含！！！！");
+						map.put(pair, curCnt++);
+						//新建侯票队列
+						Queue<User> queue = new LinkedList<>();
+						queue.add(user);
+						waitQueueList.add(queue);
+						System.out.println(queue.toString());
+					}else {
+						int temp = map.get(pair);
+						Queue<User> queue = waitQueueList.get(temp);
+						queue.add(user);
+					}
+					System.out.println(pair + "  " + waitQueueList.size());
 					
 				}else if (op.equals("购买")) {
 					int id = user.cin.readInt();
@@ -156,12 +202,14 @@ public class ServerReceive extends Thread {
 					String lv[] = { "First_class", "Business_Class", "Economy_class" };
 					while (cin.hasNext())
 						v.add(cin.next());
+					cin.close();
 					FileUtil.newInstance().addFile(
 							user.getUserName(), v.get(1) + " " + v.get(0) + " " + v.get(2) + " " + v.get(3) + " "
 									+ v.get(4) + " " + lv[level] + " " + v.get(7 + level * 2) + " " + id + " " + level,
 							true);
 					user.cout.writeObject("购买成功");
 					user.cout.flush();
+			
 				}else if(op.equals("查询订单")) {
 					User u = (User) user.cin.readObject();
 					List<Vector<String>> list = new ArrayList<>();
@@ -185,6 +233,7 @@ public class ServerReceive extends Thread {
 					int row = user.cin.readInt();
 					int n = user.cin.readInt();
 					int level = user.cin.readInt();
+					
 					Scanner cin = new Scanner(FileUtil.newInstance().readFile(user.getUserName()));
 					
 					user.setName(cin.next());
@@ -213,15 +262,50 @@ public class ServerReceive extends Thread {
 						if (i != row) {
 							Vector<String> v = list.get(i);
 							FileUtil.newInstance().addFile(user.getUserName(), v.get(0) + " " + v.get(1) + " " + v.get(2) + " " + v.get(3) + " "
-									+ v.get(4) + " " + v.get(5) + " " + v.get(6) + " " + v.get(7) + " " + v.get(7), true);
+									+ v.get(4) + " " + v.get(5) + " " + v.get(6) + " " + v.get(7) + " " + v.get(8), true);
 						}
 					}
 					user.cout.writeObject("取消成功");
 					user.cout.flush();
 					
 					int left = FileUtil.newInstance().getCnt(n, level);
+					
+					System.out.println("left after concel = " + left);
 					if(left == 1) {
-						//TODO 排队买票
+						Pair pair = new Pair(n, level);
+						if(map.containsKey(pair)) {
+							System.out.println("抢票 pair = "+pair);
+							int temp = map.get(pair);
+							Queue<User> queue = waitQueueList.get(temp);
+							
+							User frontUser = queue.poll();
+							System.out.println("抢票  name  = "+frontUser.getName());
+							if(queue.size() == 0) {
+								waitQueueList.remove(queue);
+								map.remove(pair);
+							}	
+							FileUtil.newInstance().modifyCnt(n, level, -1);
+							cin  = new Scanner(FileUtil.newInstance().getAirInfo(n));
+							Vector<String> v = new Vector<>();
+							String lv[] = { "First_class", "Business_Class", "Economy_class" };
+							while (cin.hasNext())
+								v.add(cin.next());
+							cin.close();
+							FileUtil.newInstance().addFile(
+									frontUser.getUserName(), v.get(1) + " " + v.get(0) + " " + v.get(2) + " " + v.get(3) + " "
+											+ v.get(4) + " " + lv[level] + " " + v.get(7 + level * 2) + " " + n + " " + level,
+									true);	
+							
+							frontUser.cout.writeObject("抢票成功");
+							frontUser.cout.flush();
+							frontUser.cout.writeObject(v);
+							frontUser.cout.flush();
+							
+							
+						}else {
+							System.out.println("no wait  :" + pair);
+						}
+						
 						
 					}
 				}

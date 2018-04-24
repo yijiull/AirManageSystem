@@ -6,11 +6,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
+import model.Pair;
 import model.User;
 
 public class ServerListen extends Thread {
@@ -24,12 +28,25 @@ public class ServerListen extends Thread {
 	public List<User> userList = new ArrayList<User>();
 	
 	
+	// 航班映射
+		public Map<Pair, Integer> map;
+
+		// 队列的链表
+		public List<Queue> waitQueueList;
+
+		// 当前排队数量
+		public int curCnt;
+	
 
 	public ServerListen(ServerSocket server, List<User> userList) {
 		super();
 		isStop = false;
 		this.server = server;
 		this.userList = userList;
+		
+		map = new HashMap<>();
+		waitQueueList = new ArrayList<>();
+		curCnt = 0;
 	}
 
 
@@ -106,7 +123,7 @@ public class ServerListen extends Thread {
 							temp.cin = user.cin;
 							temp.cout = user.cout;
 							temp.socket = user.socket;
-							recvThread = new ServerReceive(temp, userList);
+							recvThread = new ServerReceive(temp, userList, map, waitQueueList, curCnt);
 							recvThread.start();
 							userList.add(temp);
 							break;

@@ -217,12 +217,14 @@ public class ClientFrm extends JFrame implements ActionListener {
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		}
+		orderFrm.setLocationRelativeTo(this);
 		orderFrm.setVisible(true);
 		
 	}
 
 	private void buy() {
 		searchFrm = new SearchFrm(this);
+		searchFrm.setLocationRelativeTo(null);
 		searchFrm.setVisible(true);
 		
 	}

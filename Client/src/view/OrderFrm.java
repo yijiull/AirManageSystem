@@ -254,6 +254,7 @@ public class OrderFrm extends JFrame {
 		frm.cout.writeObject("≤È—Ø∂©µ•");
 		frm.cout.flush();
 		frm.cout.writeObject(frm.user);
+		frm.cout.flush();
 	}
 	
 	/**

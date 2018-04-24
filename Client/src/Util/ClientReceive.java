@@ -103,6 +103,7 @@ public class ClientReceive extends Thread{
 					frm.searchFrm.listId = (List<Integer>) cin.readObject();
 					frm.searchFrm.freshTable();
 				}else if(op.equals("售罄")) {
+					
 					JOptionPane.showMessageDialog(null, "对不起，该航班舱位已经售完");
 				}else if(op.equals("购买成功")) {
 					JOptionPane.showMessageDialog(frm.searchFrm, "购买成功！");
@@ -113,6 +114,9 @@ public class ClientReceive extends Thread{
 				}else if(op.equals("取消成功")) {
 					frm.orderFrm.fillTable();
 					JOptionPane.showMessageDialog(frm.orderFrm, "取消成功");
+				}else if(op.equals("抢票成功")) {
+					Vector<String> v = (Vector<String>) cin.readObject();
+					JOptionPane.showMessageDialog(frm, "您好！为您抢票成功~" + v);
 				}
 			} catch (ClassNotFoundException | IOException e) {
 				e.printStackTrace();
