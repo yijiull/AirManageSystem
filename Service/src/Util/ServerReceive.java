@@ -111,6 +111,7 @@ public class ServerReceive extends Thread {
 				} else if (op.equals("注销")) {
 					user.cout.writeObject("注销");
 					user.cout.flush();
+					
 					break;
 				} else if (op.equals("查询")) {
 					String stPlace = (String) user.cin.readObject();
@@ -277,31 +278,35 @@ public class ServerReceive extends Thread {
 							System.out.println("抢票 pair = "+pair);
 							int temp = map.get(pair);
 							Queue<User> queue = waitQueueList.get(temp);
-							
-							User frontUser = queue.poll();
-							System.out.println("抢票  name  = "+frontUser.getName());
-							if(queue.size() == 0) {
-								waitQueueList.remove(queue);
-								map.remove(pair);
-							}	
-							FileUtil.newInstance().modifyCnt(n, level, -1);
-							cin  = new Scanner(FileUtil.newInstance().getAirInfo(n));
-							Vector<String> v = new Vector<>();
-							String lv[] = { "First_class", "Business_Class", "Economy_class" };
-							while (cin.hasNext())
-								v.add(cin.next());
-							cin.close();
-							FileUtil.newInstance().addFile(
-									frontUser.getUserName(), v.get(1) + " " + v.get(0) + " " + v.get(2) + " " + v.get(3) + " "
-											+ v.get(4) + " " + lv[level] + " " + v.get(7 + level * 2) + " " + n + " " + level,
-									true);	
-							
-							frontUser.cout.writeObject("抢票成功");
-							frontUser.cout.flush();
-							frontUser.cout.writeObject(v);
-							frontUser.cout.flush();
-							
-							
+							while(!queue.isEmpty()) {
+								User frontUser = queue.poll();
+								//如果队首客户端已经关闭，则往后取
+								if(frontUser.socket.isClosed()) {
+									continue;
+								}
+								System.out.println("抢票  name  = "+frontUser.getName());
+								/*if(queue.size() == 0) {
+									waitQueueList.remove(queue);
+									map.remove(pair);
+								}	*/
+								FileUtil.newInstance().modifyCnt(n, level, -1);
+								cin  = new Scanner(FileUtil.newInstance().getAirInfo(n));
+								Vector<String> v = new Vector<>();
+								String lv[] = { "First_class", "Business_Class", "Economy_class" };
+								while (cin.hasNext())
+									v.add(cin.next());
+								cin.close();
+								FileUtil.newInstance().addFile(
+										frontUser.getUserName(), v.get(1) + " " + v.get(0) + " " + v.get(2) + " " + v.get(3) + " "
+												+ v.get(4) + " " + lv[level] + " " + v.get(7 + level * 2) + " " + n + " " + level,
+										true);	
+								
+								frontUser.cout.writeObject("抢票成功");
+								frontUser.cout.flush();
+								frontUser.cout.writeObject(v);
+								frontUser.cout.flush();	
+								break;
+							}
 						}else {
 							System.out.println("no wait  :" + pair);
 						}

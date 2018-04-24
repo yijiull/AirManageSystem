@@ -224,24 +224,27 @@ public class ClientFrm extends JFrame implements ActionListener {
 
 	private void buy() {
 		searchFrm = new SearchFrm(this);
-		searchFrm.setLocationRelativeTo(null);
+		searchFrm.setLocationRelativeTo(this);
 		searchFrm.setVisible(true);
 		
 	}
 
 	private void modify() {
 		ModifyInfoFrm frm = new ModifyInfoFrm(this);
+		frm.setLocationRelativeTo(this);
 		frm.setVisible(true);
 	}
 
 	private void logon() {
 		LogonFrm frm = new LogonFrm(this);
+		frm.setLocationRelativeTo(this);
 		frm.setVisible(true);
 		
 	}
 
 	private void regist() {
 		RegistFrm frm = new RegistFrm(this);
+		frm.setLocationRelativeTo(this);
 		frm.setVisible(true);
 	}
 	public void connect() {

@@ -80,7 +80,6 @@ public class ServiceFrm extends JFrame implements ActionListener {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				// TODO Auto-generated method stub
 				StopService();
 				dispose();
 			}
@@ -113,7 +112,6 @@ public class ServiceFrm extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -129,13 +127,11 @@ public class ServiceFrm extends JFrame implements ActionListener {
 			try {
 				rf = new RandomAccessFile("src\\File\\" + "result" + ".txt", "rw");
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {
 				System.out.println(rf.length() / 130);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {
@@ -158,13 +154,11 @@ public class ServiceFrm extends JFrame implements ActionListener {
 					bt.insertOrUpdate(t1, cnt++);
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {
 				rf.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			Node next = bt.getHead();
