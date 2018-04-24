@@ -1,6 +1,6 @@
 package view;
 
-import java.awt.BorderLayout;
+import java.awt.BorderLayout; 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -25,15 +26,18 @@ import BplusTree.Node;
 import Util.FileUtil;
 import Util.ServerListen;
 import manager.My_System;
+import model.User;
 
 public class ServiceFrm extends JFrame implements ActionListener {
 
 	public static int port = 8888; // 服务器的侦听端口
-	ServerSocket serverSocket;
+	public ServerSocket serverSocket;
 	public static BplusTree bt;
 
 	ServerListen listenThread;
 	private JPanel contentPane;
+	
+	public List<User> userList = new ArrayList<User>();
 
 	/**
 	 * Launch the application.
@@ -82,7 +86,7 @@ public class ServiceFrm extends JFrame implements ActionListener {
 		try {
 			serverSocket = new ServerSocket(port);
 			System.out.println("服务器已启动...\n正在侦听...");
-			listenThread = new ServerListen(serverSocket);
+			listenThread = new ServerListen(serverSocket, userList);
 			listenThread.start();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -167,7 +171,7 @@ public class ServiceFrm extends JFrame implements ActionListener {
 					sb.append(entry.getKey());
 					sb.append(" " + entry.getValue() + " ");
 				}
-				System.out.println(sb.toString());*/  
+				System.out.println(sb.toString());*/
 				
 				temp += entries.size();
 				System.out.println("file Size  " + entries.size());

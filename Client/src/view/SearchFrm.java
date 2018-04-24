@@ -262,13 +262,28 @@ public class SearchFrm extends JFrame {
 	 */
 	private void buyActionPerformed(ActionEvent evt) throws Exception {
 		int level = levelBox.getSelectedIndex();
-		System.out.println("舱位等级？" + level);
-		frm.cout.writeObject("购买");
-		frm.cout.flush();
-		frm.cout.writeInt(id);
-		frm.cout.writeInt(level);
-		frm.cout.flush();
-
+		
+		int left = FileUtil.newInstance().getCnt(id, level);
+		if(left == 0) {
+			int ans = JOptionPane.showConfirmDialog(this, "对不起，票已售完。请问是否排队抢票？");
+			if(ans == 1) {
+				frm.cout.writeObject("排队抢票");
+				frm.cout.flush();
+				frm.cout.writeInt(id);
+				frm.cout.writeInt(level);
+				frm.cout.flush();
+			}else {
+				return;
+			}
+			
+		}else {
+			System.out.println("舱位等级？" + level);
+			frm.cout.writeObject("购买");
+			frm.cout.flush();
+			frm.cout.writeInt(id);
+			frm.cout.writeInt(level);
+			frm.cout.flush();
+		}
 	}
 	
 	public void upd(ActionEvent e) throws Exception {

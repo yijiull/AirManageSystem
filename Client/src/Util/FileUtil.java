@@ -15,6 +15,16 @@ import java.io.RandomAccessFile;
 import java.util.Scanner;
 
 public class FileUtil {
+	
+	public static FileUtil fu= new FileUtil();
+	
+	public static FileUtil newInstance() {
+		return fu;
+	}
+	
+	private FileUtil() {
+	
+	}
 	public static void main(String[] args) throws Exception {
 		RandomAccessFile rf = new RandomAccessFile("src\\File\\" + "result" + ".txt", "rw");
 		for(int i = 0; i < 1; i++) {
@@ -53,7 +63,7 @@ public class FileUtil {
 	 * 
 	 * @throws Exception
 	 */
-	public static void makePlane() throws Exception {
+	public synchronized void makePlane() throws Exception {
 		
 		RandomAccessFile rf = new RandomAccessFile("src\\File\\" + "result" + ".txt", "rw");
 		rf.writeUTF("china air              ");  //航空公司   25
@@ -112,7 +122,7 @@ public class FileUtil {
 	 * @return  剩余票数
 	 * @throws Exception
 	 */
-	public static int getCnt(int n, int level) throws Exception {
+	public synchronized int getCnt(int n, int level) throws Exception {
 		RandomAccessFile rf = new RandomAccessFile("src\\File\\" + "result" + ".txt", "rw");
 		rf.seek((n - 1) * 130 + 106 + level * 8);
 		int temp = rf.readInt();
@@ -126,7 +136,7 @@ public class FileUtil {
 	 * @param fg
 	 * @throws Exception
 	 */
-	public static void modifyCnt(int n, int level, int fg) throws Exception {
+	public synchronized void modifyCnt(int n, int level, int fg) throws Exception {
 		RandomAccessFile rf = new RandomAccessFile("src\\File\\" + "result" + ".txt", "rw");
 		rf.seek((n - 1) * 130 + 106 + level * 8);
 		int temp = rf.readInt();
@@ -141,7 +151,7 @@ public class FileUtil {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static String getAirInfo(int n) throws Exception {
+	public synchronized String getAirInfo(int n) throws Exception {
 		RandomAccessFile rf = new RandomAccessFile("src\\File\\" + "result" + ".txt", "rw");
 		StringBuffer sb = new StringBuffer();
 		rf.seek(130L * (n-1));
@@ -166,7 +176,7 @@ public class FileUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getAllAirInfo(int id) throws Exception {
+	public synchronized String getAllAirInfo(int id) throws Exception {
 		ObjectInputStream oin = new ObjectInputStream(new FileInputStream("src\\index\\" + id + ".txt"));
 		return oin.readObject().toString();
 		
@@ -177,12 +187,13 @@ public class FileUtil {
 	 * @param name "src\\File\\" + 文件名 + ".txt"
 	 * @return 返回String
 	 */
-	public static String readFile(String name) {
+	public synchronized String readFile(String name) {
 		StringBuffer res = new StringBuffer();
 		BufferedReader bf = null;
 		try {
 			bf = new BufferedReader(new FileReader("src\\file\\" + name + ".txt"));
 		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		int temp = 0;
@@ -191,6 +202,7 @@ public class FileUtil {
 				res.append((char)temp);
 			}
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
@@ -208,7 +220,7 @@ public class FileUtil {
 	 * @param append  是否追加
 	 */
 	
-	public static void addFile(String name, String str, boolean append) {
+	public synchronized void addFile(String name, String str, boolean append) {
 		BufferedOutputStream bf = null;
 		OutputStreamWriter cout = null;
 		try {

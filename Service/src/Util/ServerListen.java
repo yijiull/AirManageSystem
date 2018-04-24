@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
@@ -19,12 +21,15 @@ public class ServerListen extends Thread {
 	private ServerReceive recvThread;
 	private User user;
 	
+	public List<User> userList = new ArrayList<User>();
 	
 	
-	public ServerListen(ServerSocket server) {
+
+	public ServerListen(ServerSocket server, List<User> userList) {
 		super();
 		isStop = false;
 		this.server = server;
+		this.userList = userList;
 	}
 
 
@@ -101,8 +106,9 @@ public class ServerListen extends Thread {
 							temp.cin = user.cin;
 							temp.cout = user.cout;
 							temp.socket = user.socket;
-							recvThread = new ServerReceive(temp);
+							recvThread = new ServerReceive(temp, userList);
 							recvThread.start();
+							userList.add(temp);
 							break;
 						}
 					}

@@ -1,9 +1,10 @@
 package Util;
 
-import java.io.File;
+import java.io.File; 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -16,12 +17,23 @@ public class ServerReceive extends Thread {
 
 	private User user;
 	private List<Integer> listId;
-
+	
+	public List<User> userList = new ArrayList<User>();
+	
+	public Queue<Ticket> queue;
+	
 	public ServerReceive() {
 	}
 
 	public ServerReceive(User user) {
 		this.user = user;
+	}
+
+	
+	public ServerReceive(User user, List<User> userList) {
+		super();
+		this.user = user;
+		this.userList = userList;
 	}
 
 	@Override
@@ -122,7 +134,12 @@ public class ServerReceive extends Thread {
 					user.cout.writeObject(list);
 					user.cout.writeObject(listId);
 					user.cout.flush();
-				} else if (op.equals("购买")) {
+				}else if(op.equals("排队抢票")){
+					int id = user.cin.readInt();
+					int level = user.cin.readInt();
+					
+					
+				}else if (op.equals("购买")) {
 					int id = user.cin.readInt();
 					int level = user.cin.readInt();
 					int left = FileUtil.newInstance().getCnt(id, level);
@@ -201,6 +218,12 @@ public class ServerReceive extends Thread {
 					}
 					user.cout.writeObject("取消成功");
 					user.cout.flush();
+					
+					int left = FileUtil.newInstance().getCnt(n, level);
+					if(left == 1) {
+						//TODO 排队买票
+						
+					}
 				}
 			} catch (ClassNotFoundException | IOException e) {
 				e.printStackTrace();
