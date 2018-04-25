@@ -129,11 +129,12 @@ public class FileUtil {
 		rf.close();
 		return temp;
 	}
+	
 	/**
 	 * 修改剩余票数
-	 * @param n
-	 * @param level
-	 * @param fg
+	 * @param n 第几个航班
+	 * @param level 仓位等级
+	 * @param fg  加1或者减1
 	 * @throws Exception
 	 */
 	public synchronized void modifyCnt(int n, int level, int fg) throws Exception {
@@ -147,7 +148,7 @@ public class FileUtil {
 	}
 	/**
 	 * 返回第n趟航班的信息
-	 * @param id
+	 * @param n
 	 * @return
 	 * @throws Exception 
 	 */

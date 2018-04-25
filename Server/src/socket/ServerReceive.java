@@ -56,8 +56,6 @@ public class ServerReceive extends Thread {
 		this.userList = userList;
 	}
 
-	
-
 	public ServerReceive(User user, List<User> userList, Map<Pair, Integer> map, List<Queue> waitQueueList,
 			int curCnt) {
 		super();
@@ -112,7 +110,7 @@ public class ServerReceive extends Thread {
 				} else if (op.equals("注销")) {
 					user.cout.writeObject("注销");
 					user.cout.flush();
-					
+
 					break;
 				} else if (op.equals("查询")) {
 					String stPlace = (String) user.cin.readObject();
@@ -135,7 +133,7 @@ public class ServerReceive extends Thread {
 						File tempFile = new File("src\\file\\index\\" + id + ".txt");
 						if (tempFile.exists() == false)
 							break;
-						Scanner cin = new Scanner(FileUtil.newInstance().readFile("index\\"+id));
+						Scanner cin = new Scanner(FileUtil.newInstance().readFile("index\\" + id));
 						while (cin.hasNext()) {
 							String time = cin.next();
 							System.out.println(time);
@@ -167,33 +165,30 @@ public class ServerReceive extends Thread {
 					user.cout.writeObject(list);
 					user.cout.writeObject(listId);
 					user.cout.flush();
-				}else if(op.equals("排队抢票")){
+				} else if (op.equals("排队抢票")) {
 					int id = user.cin.readInt();
 					int level = user.cin.readInt();
-					Pair pair = new Pair(id,level);
-					System.out.println("map = " + map);
-					if(!map.containsKey(pair)) {
-						System.out.println("不含！！！！");
+					Pair pair = new Pair(id, level);
+					if (!map.containsKey(pair)) { // 不包含该航班的等待队列
 						map.put(pair, curCnt++);
-						//新建侯票队列
-						Queue<User> queue = new LinkedList<>();
+						Queue<User> queue = new LinkedList<>(); // 新建侯票队列
 						queue.add(user);
 						waitQueueList.add(queue);
 						System.out.println(queue.toString());
-					}else {
+					} else { // 包含该航班的等待队列
 						int temp = map.get(pair);
 						Queue<User> queue = waitQueueList.get(temp);
 						queue.add(user);
 					}
 					System.out.println(pair + "  " + waitQueueList.size());
-					
-				}else if (op.equals("购买")) {
+
+				} else if (op.equals("购买")) {
 					int id = user.cin.readInt();
 					int level = user.cin.readInt();
 					int left = FileUtil.newInstance().getCnt(id, level);
-					System.out.println("剩余    = "+left);
-					if(left <= 0) {
-						
+					System.out.println("剩余    = " + left);
+					if (left <= 0) {
+
 						user.cout.writeObject("售罄");
 						user.cout.flush();
 						continue;
@@ -211,8 +206,8 @@ public class ServerReceive extends Thread {
 							true);
 					user.cout.writeObject("购买成功");
 					user.cout.flush();
-			
-				}else if(op.equals("查询订单")) {
+
+				} else if (op.equals("查询订单")) {
 					User u = (User) user.cin.readObject();
 					List<Vector<String>> list = new ArrayList<>();
 					Scanner cin = new Scanner(FileUtil.newInstance().readFile(u.getUserName()));
@@ -230,14 +225,14 @@ public class ServerReceive extends Thread {
 					user.cout.flush();
 					user.cout.writeObject(list);
 					user.cout.flush();
-				}else if(op.equals("取消订单")) {
-					
+				} else if (op.equals("取消订单")) {
+
 					int row = user.cin.readInt();
 					int n = user.cin.readInt();
 					int level = user.cin.readInt();
-					
+
 					Scanner cin = new Scanner(FileUtil.newInstance().readFile(user.getUserName()));
-					
+
 					user.setName(cin.next());
 					user.setID(cin.next());
 					user.setPhone(cin.next());
@@ -256,63 +251,63 @@ public class ServerReceive extends Thread {
 						list.add(v);
 					}
 					cin.close();
-					
+
 					FileUtil.newInstance().addFile(user.getUserName(), user.toString(), false);
 					FileUtil.newInstance().modifyCnt(n, level, 1);
-					
+
 					for (int i = 0; i < list.size(); i++) {
 						if (i != row) {
 							Vector<String> v = list.get(i);
-							FileUtil.newInstance().addFile(user.getUserName(), v.get(0) + " " + v.get(1) + " " + v.get(2) + " " + v.get(3) + " "
-									+ v.get(4) + " " + v.get(5) + " " + v.get(6) + " " + v.get(7) + " " + v.get(8), true);
+							FileUtil.newInstance()
+									.addFile(user.getUserName(),
+											v.get(0) + " " + v.get(1) + " " + v.get(2) + " " + v.get(3) + " " + v.get(4)
+													+ " " + v.get(5) + " " + v.get(6) + " " + v.get(7) + " " + v.get(8),
+											true);
 						}
 					}
 					user.cout.writeObject("取消成功");
 					user.cout.flush();
-					
+
 					int left = FileUtil.newInstance().getCnt(n, level);
-					
-					System.out.println("left after concel = " + left);
-					if(left == 1) {
+					System.out.println("left after cancel = " + left);
+					if (left == 1) {
 						Pair pair = new Pair(n, level);
-						if(map.containsKey(pair)) {
-							System.out.println("抢票 pair = "+pair);
+						if (map.containsKey(pair)) {
+							System.out.println("抢票 pair = " + pair);
 							int temp = map.get(pair);
 							Queue<User> queue = waitQueueList.get(temp);
-							while(!queue.isEmpty()) {
+							while (!queue.isEmpty()) {
 								User frontUser = queue.poll();
-								//如果队首客户端已经关闭，则往后取
-								if(frontUser.socket.isClosed()) {
+								// 如果队首客户端已经关闭，则往后取
+								if (frontUser.socket.isClosed()) {
 									continue;
 								}
-								System.out.println("抢票  name  = "+frontUser.getName());
-								/*if(queue.size() == 0) {
-									waitQueueList.remove(queue);
-									map.remove(pair);
-								}	*/
+								System.out.println("抢票  name  = " + frontUser.getName());
+								/*
+								 * if(queue.size() == 0) { waitQueueList.remove(queue); map.remove(pair); }
+								 */
 								FileUtil.newInstance().modifyCnt(n, level, -1);
-								cin  = new Scanner(FileUtil.newInstance().getAirInfo(n));
+								cin = new Scanner(FileUtil.newInstance().getAirInfo(n));
 								Vector<String> v = new Vector<>();
 								String lv[] = { "First_class", "Business_Class", "Economy_class" };
 								while (cin.hasNext())
 									v.add(cin.next());
 								cin.close();
-								FileUtil.newInstance().addFile(
-										frontUser.getUserName(), v.get(1) + " " + v.get(0) + " " + v.get(2) + " " + v.get(3) + " "
-												+ v.get(4) + " " + lv[level] + " " + v.get(7 + level * 2) + " " + n + " " + level,
-										true);	
-								
+								FileUtil.newInstance().addFile(frontUser.getUserName(),
+										v.get(1) + " " + v.get(0) + " " + v.get(2) + " " + v.get(3) + " " + v.get(4)
+												+ " " + lv[level] + " " + v.get(7 + level * 2) + " " + n + " " + level,
+										true);
+
 								frontUser.cout.writeObject("抢票成功");
 								frontUser.cout.flush();
 								frontUser.cout.writeObject(v);
-								frontUser.cout.flush();	
+								frontUser.cout.flush();
 								break;
 							}
-						}else {
+						} else {
 							System.out.println("no wait  :" + pair);
 						}
-						
-						
+
 					}
 				}
 			} catch (ClassNotFoundException | IOException e) {

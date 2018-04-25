@@ -65,7 +65,8 @@ public class OrderFrm extends JFrame {
 
 	/**
 	 * Create the frame.
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	public OrderFrm(ClientFrm frm) throws IOException {
 		this.frm = frm;
@@ -248,7 +249,7 @@ public class OrderFrm extends JFrame {
 	 * 向服务端发送查询信息
 	 * 
 	 * @param user
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private void query() throws IOException {
 		frm.cout.writeObject("查询订单");
@@ -256,15 +257,15 @@ public class OrderFrm extends JFrame {
 		frm.cout.writeObject(frm.user);
 		frm.cout.flush();
 	}
-	
+
 	/**
 	 * 填充表格
 	 */
 	public void fillTable() {
 		DefaultTableModel dtm = (DefaultTableModel) OrderTable.getModel();
 		dtm.setRowCount(0); // 清空表格
-		
-		for(int i = 0; i <list.size(); i++) {
+
+		for (int i = 0; i < list.size(); i++) {
 			Vector<String> temp = new Vector<String>(list.get(i));
 			dtm.addRow(temp);
 		}
